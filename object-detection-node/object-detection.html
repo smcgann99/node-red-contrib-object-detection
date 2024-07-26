@@ -15,11 +15,13 @@
               this._def.outputLabels = ["Detected Object"];
             } else if (returnValue == 1) {
               this._def.outputLabels = ["Image Buffer"];
+            } else if (returnValue == 2) {
+                this._def.outputLabels = ["Image Split"];
             }
             this._def.defaults.absolutePathDir.validate = function (v) {
               return true;
             };
-          } else if (returnValue == 2) {
+          } else if (returnValue == 3) {
             $("#absolutePathDir-form").css("display", "block");
             this._def.outputLabels = ["Image Path"];
             this._def.defaults.absolutePathDir.validate = function (v) {
@@ -76,9 +78,10 @@
       <i class="fa fa-file"></i> Return Value
     </label>
     <select type="text" id="node-input-returnValue">
-      <option value="0">Detected Object</option>
-      <option value="1">Image Buffer</option>
-      <option value="2">Image File</option>
+        <option value="0">Detected Object</option>
+        <option value="1">Image Buffer</option>
+        <option value="2">Image Split</option>
+        <option value="3">Image File</option>
     </select>
   </div>
   <div class="form-row">

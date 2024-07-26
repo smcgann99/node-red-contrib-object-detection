@@ -30,7 +30,7 @@ module.exports = function (RED) {
           );
         }
 
-        if (returnValue === 2 && fs.existsSync(saveDir) === false) {
+        if (returnValue === 3 && fs.existsSync(saveDir) === false) {
           this.status({
             fill: "red",
             shape: "ring",
@@ -48,8 +48,10 @@ module.exports = function (RED) {
         if (returnValue === 0) {
           msg.payload.data = getDetectedObjects(boxes);
         } else if (returnValue === 1) {
-          msg.payload.data = await getImageBuffers(boxes, bufferFromImage);
+            msg.payload.data = await getDrawImageBuffers(boxes, bufferFromImage);
         } else if (returnValue === 2) {
+            msg.payload.data = await getImageBuffers(boxes, bufferFromImage);
+        } else if (returnValue === 3) {
           let objectsCount = Array(80)
             .fill()
             .map(() => 0);
@@ -173,6 +175,23 @@ module.exports = function (RED) {
       );
       return result;
     }
+
+      async function getDrawImageBuffers(boxes, bufferFromImage) {
+          const result = {};
+          const svgArray = [];
+          boxes.forEach((box) => {
+              const svgBuffer = Buffer.from(
+                  `<svg><rect width="${parseInt((box[2] - box[0] - 5))}" height="${parseInt((box[3] - box[1] - 5))}" stroke="red" stroke-width="5" fill="none"/><text x="5" y="15" fill="red" font-size="15">${box[4]} ${(box[5]).toFixed(2)}</text></svg>`
+              );
+              svgArray.push({ input: svgBuffer, top: parseInt(box[1]), left: parseInt(box[0]), blend: 'over' });
+          });
+
+          const buffer = await sharp(bufferFromImage)
+              .composite(svgArray)
+              .toFormat("png")
+              .toBuffer();
+          return buffer;
+      }
 
     async function saveImages(boxes, objectsCount, bufferFromImage) {
       const today = new Date();
