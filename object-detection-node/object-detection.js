@@ -25,8 +25,10 @@ module.exports = function (RED) {
 
       try {
         if (model === undefined) {
+          const sessionOption = { executionProviders: [config.ep] };
           model = await ort.InferenceSession.create(
-            `${__dirname}/../model/${config.model}.onnx`
+            `${__dirname}/../model/${config.model}.onnx`,
+            sessionOption
           );
         }
 

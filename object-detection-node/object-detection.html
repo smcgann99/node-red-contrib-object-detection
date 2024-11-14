@@ -9,7 +9,7 @@
         validate: function (v) {
           const returnValue = Number(v);
 
-          if (returnValue <= 1) {
+          if (returnValue <= 2) {
             $("#absolutePathDir-form").css("display", "none");
             if (returnValue == 0) {
               this._def.outputLabels = ["Detected Object"];
@@ -33,6 +33,7 @@
         },
       },
       model: { value: "yolov8n" },
+      ep: { value: "cpu" },
       threshold: {
         value: 0.5,
         validate: function (v) {
@@ -72,6 +73,14 @@
       <option value="yolov8s">YoloV8s</option>
       <option value="yolov8m">YoloV8m</option>
     </select>
+  </div>
+  <div class="form-row">
+      <label for="node-input-ep"><i class="fa fa-wrench"></i> Device</label>
+      <select type="text" id="node-input-ep">
+          <option value="cpu">CPU (Default)</option>
+          <option value="cuda">CUDA (Linux Only)</option>
+          <option value="dml">DirectML (Window Only)</option>
+      </select>
   </div>
   <div class="form-row">
     <label for="node-input-returnValue">
